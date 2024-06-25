@@ -4,7 +4,7 @@ wget -q -O- https://raw.githubusercontent.com/openstack/rally/master/install_ral
 or using curl:
 curl https://raw.githubusercontent.com/openstack/rally/master/install_rally.sh | bash
 
-If you execute the script as regular user, Rally will create a new virtual environment in ~/rally/ and install in it Rally, and will use sqlite as database backend. If you execute the script as root, Rally will be installed system wide. For more installation options, please refer to the installation page.
+If you execute the script as regular user, Rally will create a new virtual environment in ~/rally/ and install in it Rally, and will use sqlite as database backend. If you execute the script as root, Rally will be installed system wide.
 ### Setting up the environment and running a task from samples
 First, you have to provide Rally with an OpenStack deployment that should be tested. This should be done either through OpenRC files or through deployment configuration files. In case you already have an OpenRC, it is extremely simple to register a deployment with the deployment create command:
 rally deployment create --file=existing.json --name=existing
