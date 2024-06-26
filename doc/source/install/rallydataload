@@ -1,0 +1,33 @@
+## Install rally use openstack helm
+There is a helm chart https://github.com/samsung-cnct/openstack-helm/commit/85a4806438d8a10b355611b642754dba06e8cf9a
+First step is to  pull this branch to your local ubuntu server
+
+use this script to deploy rally
+set -xe
+
+#NOTE: Define variables
+: ${OSH_HELM_REPO:="../openstack-helm"}
+: ${OSH_PATH:="../openstack-helm"}
+: ${OSH_EXTRA_HELM_ARGS_GLANCE:="$(helm osh get-values-overrides ${DOWNLOAD_OVERRIDES:-} -p ${OSH_PATH} -c glance ${FEATURES})"}
+: ${GLANCE_BACKEND:="pvc"}
+
+#NOTE: Deploy command
+
+helm upgrade --install rally ${OSH_HELM_REPO}/rally \
+  --namespace=openstack \
+  ${OSH_EXTRA_HELM_ARGS:=} \
+  ${OSH_EXTRA_HELM_ARGS_GLANCE}
+
+#NOTE: Wait for deploy
+helm osh wait-for-pods openstack
+
+
+rally deployed as a cron job. you can configure that how frequently you want to run rally data load.
+It can be configured in values.yaml rally_task job
+
+
+
+you can configure which service you want to run rally job. There are some comments in values.yaml instruct how to do that.
+
+
+
