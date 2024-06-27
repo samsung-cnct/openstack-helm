@@ -1,8 +1,62 @@
 ## Configure and deploy openstack with trace
-## Openstack have a project osprofiler which is used to trace openstack services
+
+### Openstack have a project osprofiler which is used to trace openstack services
+
 OSProfiler provides a tiny but powerful library that is used by most (soon to be all) OpenStack projects and their python clients. 
 It provides functionality to generate 1 trace per request, that goes through all involved services. 
 This trace can then be extracted and used to build a tree of calls which can be quite handy for a variety of reasons
+
 OpenStack consists of multiple projects. Each project, in turn, is composed of multiple services. 
 To process some request, e.g. to boot a virtual machine, OpenStack uses multiple services from different projects. 
 In the case something works too slow, it’s extremely complicated to understand what exactly goes wrong and to locate the bottleneck.
+OSProfiler provides a tiny but powerful library.
+
+This library should be easy integrable into OpenStack. This means that:
+
+It shouldn’t require too many changes in code bases of projects it’s integrated with.
+
+We should be able to fully turn it off.
+
+We should be able to keep it turned on in lazy mode in production (e.g. admin should be able to “trace” on request).
+
+
+### How to configure osprofiler in openstack helm
+In openstack helm which a project use helm chart to deploy and manage openstack. osprofiler already install in some services container.
+Some of drives that already supported by osprofiler such as redis, elasticsearch, otlp, jaeger. In this openstack deployment. otel are used to collect traces.
+Otlp is a protocol Otel support. So osprofiler are configured to use otlp driver which used to send trace to otel.
+In openstack helm chart, containers already installed osprofiler. But some of libaries that osprofiler depend on are not installed.
+There are two libaries that otlp drive used should installed such as opentelemetry-sdk and opentelemetry-exporter-otlp.
+
+Here are some steps to install these libaries:
+
+In these files add libaries
+
+keystone/templates/bin/_keystone-api.sh.tpl 
+
+glance/templates/bin/_glance-api.sh.tpl 
+
+nova/templates/bin/_nova-api-metadata.sh.tpl 
+
+nova/templates/bin/_nova-compute.sh.tpl 
+
+nova/templates/bin/_nova-scheduler.sh.tpl 
+
+nova/templates/bin/_nova-scheduler.sh.tpl
+
+Add pip install opentelemetry.sdk opentelemetry.exporter.otlp in script
+
+
+Some of files not config and include api-paste.ini
+
+Here some step to configure and add these configurations:
+
+In nova/templates/deployment-conductor.yaml
+
+Add these configure for api-paste.ini
+- name: nova-etc
+    mountPath: /etc/nova/api-paste.ini
+    subPath: api-paste.ini
+    readOnly: true
+
+
+
