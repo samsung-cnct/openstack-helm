@@ -58,5 +58,22 @@ Add these configure for api-paste.ini
     subPath: api-paste.ini
     readOnly: true
 
+nova/templates/deployment-scheduler.yaml
 
+- name: nova-etc
+    mountPath: /etc/nova/api-paste.ini
+    subPath: api-paste.ini
+    readOnly: true
+
+There is a configure in openstack values.yaml that can enable trace and configure endpoint of trace.
+
+In what service you want to enable trace
+
+In paste section
+
+profiler:
+      enabled: true
+      hmac_keys: cnct-obv
+      trace_sqlalchemy: true
+      connection_string: otlp://localhost:4318
 
