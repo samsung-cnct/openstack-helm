@@ -1,0 +1,8 @@
+## Configure and deploy openstack with trace
+## Openstack have a project osprofiler which is used to trace openstack services
+OSProfiler provides a tiny but powerful library that is used by most (soon to be all) OpenStack projects and their python clients. 
+It provides functionality to generate 1 trace per request, that goes through all involved services. 
+This trace can then be extracted and used to build a tree of calls which can be quite handy for a variety of reasons
+OpenStack consists of multiple projects. Each project, in turn, is composed of multiple services. 
+To process some request, e.g. to boot a virtual machine, OpenStack uses multiple services from different projects. 
+In the case something works too slow, it’s extremely complicated to understand what exactly goes wrong and to locate the bottleneck.
